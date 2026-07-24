@@ -1,0 +1,1655 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "d3b126af-b804-4370-adbc-47935a74624e",
+      "name": "Every 1 min",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -592,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1h7qkhgQt3EpDPWBzasl-LIxP8l8GR8N7nCHaxoUsyPM",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1849445784,
+          "mode": "list",
+          "cachedResultName": "Requests",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1h7qkhgQt3EpDPWBzasl-LIxP8l8GR8N7nCHaxoUsyPM/edit#gid=1849445784"
+        },
+        "options": {}
+      },
+      "id": "c4aefa93-80a2-4038-870e-5684c1bfcf20",
+      "name": "Read sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -384,
+        256
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X8BoBuggvhRtdrbV",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().filter(i => {\n  const text = (i.json['Text'] || '').toString().trim();\n  const status = (i.json['Image status'] || '').toString().trim().toLowerCase();\n  return text !== '' && status === '';\n})"
+      },
+      "id": "759187b8-b787-4d8e-b58d-09024120f70f",
+      "name": "Filter: needs image",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -192,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1h7qkhgQt3EpDPWBzasl-LIxP8l8GR8N7nCHaxoUsyPM",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1849445784,
+          "mode": "list",
+          "cachedResultName": "Requests",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1h7qkhgQt3EpDPWBzasl-LIxP8l8GR8N7nCHaxoUsyPM/edit#gid=1849445784"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $json.row_number }}",
+            "Image status": "processing",
+            "Text": "={{ $json.Text }}",
+            "Last updated": "=={{ $now.format('yyyy-MM-dd HH:mm') }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Text",
+              "displayName": "Text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image status",
+              "displayName": "Image status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Image link",
+              "displayName": "Image link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Text after image",
+              "displayName": "Text after image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Video status",
+              "displayName": "Video status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Video link",
+              "displayName": "Video link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notes / Error",
+              "displayName": "Notes / Error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last updated",
+              "displayName": "Last updated",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "8fa0fe22-96d4-464d-9911-09362ab9963b",
+      "name": "Sheets: mark image processing",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        16,
+        256
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X8BoBuggvhRtdrbV",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-goog-api-key",
+              "value": "AQ.Ab8RN6IQMQBS18rVJg9vwwHuigQemnC8jtYn1C-IWzDvKt2NmA"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [{ \"parts\": [{ \"text\": \"{{ $('Filter: needs image').item.json['Text'] }}\" }] }],\n  \"generationConfig\": { \"responseModalities\": [\"IMAGE\"] }\n}",
+        "options": {}
+      },
+      "id": "49ab4c32-d1a7-48c8-9157-9aabc14d5669",
+      "name": "Gemini - image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        208,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const candidate = $json.candidates && $json.candidates[0];\nconst parts = candidate && candidate.content && candidate.content.parts;\nconst imgPart = parts && (parts.find((p) => p.inlineData) || parts[0]);\nconst src = $('Filter: needs image').item.json;\nif (!imgPart || !imgPart.inlineData) {\n  return { json: { row_number: src.row_number, error: true,\n    message: (($json.error && $json.error.message) || 'Gemini returned no image').slice(0, 200) } };\n}\nreturn {\n  json: { row_number: src.row_number, error: false },\n  binary: { image: { data: imgPart.inlineData.data, mimeType: 'image/png', fileName: `row_${src.row_number}.png` } }\n};\n"
+      },
+      "id": "9fc9463d-b982-4c09-ac74-1b9ad9fb282c",
+      "name": "Prepare image binary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c184bcd8-e6b0-4b1c-b6b4-b73f4668f588",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "f3b0849d-63b8-4336-bb9f-4fbb1089c1c1",
+      "name": "Image ok?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        608,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "image",
+        "name": "=row_{{ $json.row_number }}.png",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1qWJ-JKwBg7ZtUJlDBtYjuQMjNg7-DMWp",
+          "mode": "list",
+          "cachedResultName": "Rafij Vai ",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1qWJ-JKwBg7ZtUJlDBtYjuQMjNg7-DMWp"
+        },
+        "options": {}
+      },
+      "id": "472b41d2-1ebf-4f45-b4c5-bfee83a28c69",
+      "name": "Drive: upload image",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        816,
+        144
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Tu1CRG5Ug1V2mqqH",
+          "name": "Google Drive account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "id": "b452c818-a326-4059-ba93-ec4c50cee00b",
+      "name": "Drive: share image",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1024,
+        144
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Tu1CRG5Ug1V2mqqH",
+          "name": "Google Drive account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1h7qkhgQt3EpDPWBzasl-LIxP8l8GR8N7nCHaxoUsyPM",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1849445784,
+          "mode": "list",
+          "cachedResultName": "Requests",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1h7qkhgQt3EpDPWBzasl-LIxP8l8GR8N7nCHaxoUsyPM/edit#gid=1849445784"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $('Read sheet').item.json.row_number }}",
+            "Image status": "Done",
+            "Image link": "={{ $('Drive: upload image').item.json.webViewLink }}",
+            "Last updated": "=={{ $now.format('yyyy-MM-dd HH:mm') }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Text",
+              "displayName": "Text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image status",
+              "displayName": "Image status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image link",
+              "displayName": "Image link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Text after image",
+              "displayName": "Text after image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Video status",
+              "displayName": "Video status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Video link",
+              "displayName": "Video link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notes / Error",
+              "displayName": "Notes / Error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last updated",
+              "displayName": "Last updated",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "5fe56579-bccf-45ae-918c-efb88bed40b3",
+      "name": "Sheets: write image done",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1216,
+        144
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X8BoBuggvhRtdrbV",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1h7qkhgQt3EpDPWBzasl-LlxP8l8GR8N7nCHaxoUsyPM",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Requests",
+          "mode": "name",
+          "cachedResultName": "Requests"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $json.row_number }}",
+            "Image status": "error",
+            "Notes / Error": "={{ $json.message }}",
+            "Last updated": "={{ $now.format('yyyy-MM-dd HH:mm') }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": []
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED"
+        }
+      },
+      "id": "ddcd4363-5f27-46da-8315-961a935d9e73",
+      "name": "Sheets: write image error",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        816,
+        368
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X8BoBuggvhRtdrbV",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## WATCHER 1 - Text -> Image\nMatches request_tracker.xlsx exactly: Text, Image status, Image link, Notes / Error, Last updated.\n\nFlow: poll sheet -> keep rows with Text filled + Image status blank -> mark 'processing'\n(so a slow run is never picked up twice) -> generate image -> on success: upload to Drive,\nshare, write Image link + status=done -> on failure: write status=error + a readable message\nto Notes / Error instead of leaving the row stuck on 'processing'.\n\nSETUP:\n1. Replace YOUR_GEMINI_API_KEY in 'Gemini - image'.\n2. Replace YOUR_SHEET_ID (top of build script) with your real spreadsheet ID, and confirm the\n   sheet/tab name matches SHEET_NAME ('Requests').\n3. Connect real Google Sheets + Google Drive credentials on every Sheets/Drive node.\n4. To retry an error row: clear its Image status cell back to blank.",
+        "height": 460,
+        "width": 520,
+        "color": 4
+      },
+      "id": "bda399c2-6b85-4988-b9eb-4fb4eece5a82",
+      "name": "Guide: Watcher 1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1184,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## WATCHER 2 - Video + Audio (parallel branches)\n\nTrigger: Image status=done, Text after image filled, Video status OR Audio Status blank.\nBoth branches fire from the same filter output - they run in parallel.\n\nVIDEO: Veo create -> poll loop (30s) -> download -> Drive upload -> share -> Video link + done\nAUDIO: Gemini TTS -> WAV header wrap -> Drive upload -> share -> Audio Link + done\n\nBoth write back to their own columns independently.\nNeither overwrites the other's status.\n\nSHEET COLUMNS (exact names):\nA: Text | B: Image status | C: Image link | D: Text after image\nE: Video status | F: Video link | G: Notes / Error | H: Last updated\nI: Audio Status | J: Audio Link\n\nSETUP:\n1. Sheet ID is pre-filled: 1h7qkhgQt3EpDPWBzasl-LlxP8l8GR8N7nCHaxoUsyPM\n2. Replace YOUR_GEMINI_API_KEY in Veo-create, Veo-poll, Gemini-TTS nodes.\n3. Connect real Drive + Sheets credentials on every Drive/Sheets node.\n4. To retry: clear Video status or Audio Status back to blank.",
+        "height": 480,
+        "width": 520,
+        "color": 5
+      },
+      "id": "e874b1c6-cfbe-49a8-b6e3-0709b5a21dbe",
+      "name": "Guide",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1440,
+        1424
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.elevenlabs.io/v1/text-to-speech/YOUR_VOICE_ID",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "xi-api-key",
+              "value": "YOUR_ELEVENLABS_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"text\": \"{{ $json['Text after image'] }}\",\n  \"model_id\": \"eleven_multilingual_v2\",\n  \"voice_settings\": { \"stability\": 0.5, \"similarity_boost\": 0.75 }\n}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "358658e7-e0cc-49dd-a698-d4d122776c1f",
+      "name": "ElevenLabs - create audio",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        32,
+        1776
+      ],
+      "notesInFlow": true,
+      "disabled": true,
+      "notes": "Placeholder branch — needs ElevenLabs API key + voice ID. Currently disabled so it does not affect the video branch."
+    },
+    {
+      "parameters": {
+        "name": "=row_{{ $('Mark both processing1').item.json.row_number }}_audio.mp3",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "root",
+          "mode": "list",
+          "cachedResultName": "/ (Root)"
+        },
+        "options": {}
+      },
+      "id": "37760498-e341-4251-86ed-f9e4a74149a0",
+      "name": "Drive: upload audio",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        224,
+        1776
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Tu1CRG5Ug1V2mqqH",
+          "name": "Google Drive account 4"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "id": "bf26a705-039e-4123-8631-7c7117910252",
+      "name": "Drive: share audio",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        432,
+        1776
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Tu1CRG5Ug1V2mqqH",
+          "name": "Google Drive account 4"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1h7qkhgQt3EpDPWBzasl-LIxP8l8GR8N7nCHaxoUsyPM",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1849445784,
+          "mode": "list",
+          "cachedResultName": "Requests"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $('Mark both processing1').item.json.row_number }}",
+            "Audio Status": "done",
+            "Audio link": "={{ $json.webViewLink }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "6f399603-b311-47cc-8587-f30e396f2f26",
+      "name": "Sheets: audio done",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        624,
+        1776
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X8BoBuggvhRtdrbV",
+          "name": "Google Sheets account 2"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 30
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -800,
+        1616
+      ],
+      "id": "7f45a550-037c-4d5f-ae63-24d672bbd3f1",
+      "name": "Schedule Trigger1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1h7qkhgQt3EpDPWBzasl-LIxP8l8GR8N7nCHaxoUsyPM",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1849445784,
+          "mode": "list",
+          "cachedResultName": "Requests",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1h7qkhgQt3EpDPWBzasl-LIxP8l8GR8N7nCHaxoUsyPM/edit#gid=1849445784"
+        },
+        "options": {}
+      },
+      "id": "9de7d6b4-e156-4ea6-9808-c9d581d145b3",
+      "name": "Read sheet2",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -576,
+        1584
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X8BoBuggvhRtdrbV",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const matches = $input.all().filter(i => {\n  const imgStatus = (i.json['Image status'] || '').toString().trim().toLowerCase();\n  const videoPrompt = (i.json['Text after image'] || '').toString().trim();\n  const videoStatus = (i.json['Video status'] || '').toString().trim().toLowerCase();\n  const audioStatus = (i.json['Audio Status'] || '').toString().trim().toLowerCase();\n  // row qualifies if image is done, video prompt exists,\n  // and EITHER video OR audio still needs doing\n  return imgStatus === 'done' && videoPrompt !== '' &&\n    (videoStatus === '' || audioStatus === '');\n});\n\nreturn matches.length ? [matches[matches.length - 1]] : [];"
+      },
+      "id": "460034ba-0bd0-4677-9a1d-605e7855f9f8",
+      "name": "Filter: needs work1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -368,
+        1584
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1h7qkhgQt3EpDPWBzasl-LIxP8l8GR8N7nCHaxoUsyPM",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1849445784,
+          "mode": "list",
+          "cachedResultName": "Requests",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1h7qkhgQt3EpDPWBzasl-LIxP8l8GR8N7nCHaxoUsyPM/edit#gid=1849445784"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $json.row_number }}",
+            "Video status": "=Processing"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Text",
+              "displayName": "Text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image status",
+              "displayName": "Image status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image link",
+              "displayName": "Image link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Text after image",
+              "displayName": "Text after image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Video status",
+              "displayName": "Video status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Video link",
+              "displayName": "Video link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Audio Status",
+              "displayName": "Audio Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Audio link",
+              "displayName": "Audio link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last updated",
+              "displayName": "Last updated",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "7bcf5da4-c91e-47f2-bee9-3d52b35a23c8",
+      "name": "Mark both processing1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -176,
+        1584
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X8BoBuggvhRtdrbV",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/veo-3.1-generate-preview:predictLongRunning",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-goog-api-key",
+              "value": "AQ.Ab8RN6KpBOR9Q8bTnNe3ATeCZSbbxVgo3JNRwNDN_4eqb0P28Q"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"instances\": [{ \"prompt\": \"{{ $('Filter: needs work1').item.json['Text after image'] }}\" }]\n}",
+        "options": {}
+      },
+      "id": "705ccd04-64cf-4f24-b5be-935f5cbf6797",
+      "name": "Veo - create",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        32,
+        1392
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return { json: { ...$json, row_number: $('Filter: needs work1').item.json.row_number } };\n"
+      },
+      "id": "fe8bb317-efee-4d07-b785-e483fe88784f",
+      "name": "Carry row (video)1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        1392
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "id": "5f734c3a-0fb6-4689-9451-cf4d8a13d9e8",
+      "name": "Wait 30s",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        432,
+        1392
+      ],
+      "webhookId": "79ccde22-c42b-415c-bfd1-4c0a08dfcd7a"
+    },
+    {
+      "parameters": {
+        "url": "=https://generativelanguage.googleapis.com/v1beta/{{ $json.name }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-goog-api-key",
+              "value": "AQ.Ab8RN6KpBOR9Q8bTnNe3ATeCZSbbxVgo3JNRwNDN_4eqb0P28Q"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ee59e457-717d-4b52-928a-3761fd448649",
+      "name": "Veo - poll",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        624,
+        1392
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8ee4e510-b73a-4589-bb80-a51821be9a8c",
+              "leftValue": "={{ $json.done }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "4e0a7e4f-4dde-4e18-ab48-001edb0dbb30",
+      "name": "Video done?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        832,
+        1392
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const row = $json.row_number;\nconst samples = $json.response?.generateVideoResponse?.generatedSamples;\nconst uri = samples && samples[0]?.video?.uri;\nif (!uri) return { json: { row_number: row, error: true,\n  message: ($json.error?.message || 'Veo finished with no video output').slice(0,200) } };\nreturn { json: { row_number: row, error: false, video_uri: uri } };\n"
+      },
+      "id": "0b35a3d3-209b-4327-a669-855668e397b8",
+      "name": "Check video result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1024,
+        1296
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d8cffaa9-4bbd-4952-b925-3a051524226f",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "89fb55ab-89a2-4183-8630-790af6199869",
+      "name": "Video ok?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1232,
+        1296
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.video_uri }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-goog-api-key",
+              "value": "AQ.Ab8RN6KpBOR9Q8bTnNe3ATeCZSbbxVgo3JNRwNDN_4eqb0P28Q"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "6a4f7bae-d8de-4c2d-966b-2189c9928e36",
+      "name": "Download clip",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1424,
+        1184
+      ]
+    },
+    {
+      "parameters": {
+        "name": "=row_{{ $('Check video result').item.json.video_uri }}_video.mp4",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "root",
+          "mode": "list",
+          "cachedResultName": "/ (Root)"
+        },
+        "options": {}
+      },
+      "id": "2c6422cd-123c-42e8-a460-bb06524f51b9",
+      "name": "Drive: upload video",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1632,
+        1184
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Tu1CRG5Ug1V2mqqH",
+          "name": "Google Drive account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "id": "80acfbe8-4765-4190-8a5c-6ce38e4368f8",
+      "name": "Drive: share video",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1824,
+        1184
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Tu1CRG5Ug1V2mqqH",
+          "name": "Google Drive account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1h7qkhgQt3EpDPWBzasl-LIxP8l8GR8N7nCHaxoUsyPM",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1849445784,
+          "mode": "list",
+          "cachedResultName": "Requests",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1h7qkhgQt3EpDPWBzasl-LIxP8l8GR8N7nCHaxoUsyPM/edit#gid=1849445784"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $('Carry row (video)1').item.json.row_number }}",
+            "Video link": "={{ $('Drive: upload video').item.json.webViewLink }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Text",
+              "displayName": "Text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image status",
+              "displayName": "Image status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image link",
+              "displayName": "Image link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Text after image",
+              "displayName": "Text after image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Video status",
+              "displayName": "Video status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Video link",
+              "displayName": "Video link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Audio Status",
+              "displayName": "Audio Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Audio link",
+              "displayName": "Audio link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last updated",
+              "displayName": "Last updated",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "238901d0-0589-4a5e-ba28-ed8613772a75",
+      "name": "Sheets: video done1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2032,
+        1184
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X8BoBuggvhRtdrbV",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1h7qkhgQt3EpDPWBzasl-LlxP8l8GR8N7nCHaxoUsyPM",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Requests",
+          "mode": "name",
+          "cachedResultName": "Requests"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $json.row_number }}",
+            "Video status": "error",
+            "Notes / Error": "={{ $json.message }}",
+            "Last updated": "={{ new Date().toISOString().slice(0,16).replace('T',' ') }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": []
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED"
+        }
+      },
+      "id": "74d3253d-f186-48cd-940c-5e559ccd1e81",
+      "name": "Sheets: video error1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1424,
+        1408
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X8BoBuggvhRtdrbV",
+          "name": "Google Sheets account 2"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Every 1 min": {
+      "main": [
+        [
+          {
+            "node": "Read sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read sheet": {
+      "main": [
+        [
+          {
+            "node": "Filter: needs image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter: needs image": {
+      "main": [
+        [
+          {
+            "node": "Sheets: mark image processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sheets: mark image processing": {
+      "main": [
+        [
+          {
+            "node": "Gemini - image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini - image": {
+      "main": [
+        [
+          {
+            "node": "Prepare image binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare image binary": {
+      "main": [
+        [
+          {
+            "node": "Image ok?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image ok?": {
+      "main": [
+        [
+          {
+            "node": "Drive: upload image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sheets: write image error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Drive: upload image": {
+      "main": [
+        [
+          {
+            "node": "Drive: share image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Drive: share image": {
+      "main": [
+        [
+          {
+            "node": "Sheets: write image done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ElevenLabs - create audio": {
+      "main": [
+        [
+          {
+            "node": "Drive: upload audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Drive: upload audio": {
+      "main": [
+        [
+          {
+            "node": "Drive: share audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Drive: share audio": {
+      "main": [
+        [
+          {
+            "node": "Sheets: audio done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Read sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read sheet2": {
+      "main": [
+        [
+          {
+            "node": "Filter: needs work1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter: needs work1": {
+      "main": [
+        [
+          {
+            "node": "Mark both processing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark both processing1": {
+      "main": [
+        [
+          {
+            "node": "Veo - create",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "ElevenLabs - create audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Veo - create": {
+      "main": [
+        [
+          {
+            "node": "Carry row (video)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Carry row (video)1": {
+      "main": [
+        [
+          {
+            "node": "Wait 30s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 30s": {
+      "main": [
+        [
+          {
+            "node": "Veo - poll",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Veo - poll": {
+      "main": [
+        [
+          {
+            "node": "Video done?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video done?": {
+      "main": [
+        [
+          {
+            "node": "Check video result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait 30s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check video result": {
+      "main": [
+        [
+          {
+            "node": "Video ok?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video ok?": {
+      "main": [
+        [
+          {
+            "node": "Download clip",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sheets: video error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download clip": {
+      "main": [
+        [
+          {
+            "node": "Drive: upload video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Drive: upload video": {
+      "main": [
+        [
+          {
+            "node": "Drive: share video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Drive: share video": {
+      "main": [
+        [
+          {
+            "node": "Sheets: video done1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a0a76df22adb25b4e801b491ee1d537ff527c8a69c65f7b51f2eb95eaeeb6d3b"
+  }
+}
